@@ -4,14 +4,11 @@ from app.api.routes import repo, chat, pr, docs, tests
 
 app = FastAPI(title="CodeSherlock X API")
 
+# Open CORS for deployment/demo
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[
-        "http://localhost:3000",
-        "http://127.0.0.1:3000",
-        "https://codesherlock-x-1.onrender.com",
-    ],
-    allow_credentials=True,
+    allow_origins=["*"],
+    allow_credentials=False,
     allow_methods=["*"],
     allow_headers=["*"],
 )
