@@ -1,26 +1,35 @@
 import os
 import requests
+
 from dotenv import load_dotenv
-from app.utils.response_parser import extract_ai_text
+
+from app.utils.response_parser import (
+    extract_ai_text
+)
 
 load_dotenv()
 
+# Supports any OpenAI-compatible endpoint.
+# Defaults to Groq (free tier: https://console.groq.com)
+# Set LLM_API_KEY and optionally LLM_API_URL + LLM_MODEL in .env
 LLM_API_KEY = os.getenv("LLM_API_KEY")
 LLM_API_URL = os.getenv(
     "LLM_API_URL",
     "https://api.groq.com/openai/v1/chat/completions"
 )
-LLM_MODEL = os.getenv("LLM_MODEL", "llama-3.1-8b-instant")
+LLM_MODEL = os.getenv("LLM_MODEL", "llama3-8b-8192")
 
 
-def send_bob_request(prompt: str, max_tokens: int = 400):
+def send_bob_request(prompt: str, max_tokens: int = 1200):
+    """
+    Generic LLM request handler (OpenAI-compatible chat completions).
+    Works with Groq, OpenAI, Ollama, or any compatible provider.
+    """
+
     payload = {
         "model": LLM_MODEL,
         "messages": [
-            {
-                "role": "user",
-                "content": prompt
-            }
+            {"role": "user", "content": prompt}
         ],
         "max_tokens": max_tokens,
         "temperature": 0.3
@@ -31,88 +40,191 @@ def send_bob_request(prompt: str, max_tokens: int = 400):
         "Content-Type": "application/json"
     }
 
-    try:
-        response = requests.post(
-            LLM_API_URL,
-            headers=headers,
-            json=payload,
-            timeout=60
-        )
+    response = requests.post(
+        LLM_API_URL,
+        headers=headers,
+        json=payload,
+        timeout=60
+    )
 
-        if response.status_code == 429:
-            return "LLM rate limit exceeded. Please try again later."
+    response.raise_for_status()
 
-        if response.status_code != 200:
-            print("LLM API Error:", response.status_code)
-            print("LLM Response:", response.text)
+    data = response.json()
 
-        response.raise_for_status()
+    # OpenAI chat completions format: choices[0].message.content
+    if "choices" in data and data["choices"]:
+        choice = data["choices"][0]
+        if "message" in choice:
+            return choice["message"]["content"]
+        if "text" in choice:
+            return choice["text"]
 
-        data = response.json()
-
-        if "choices" in data and data["choices"]:
-            choice = data["choices"][0]
-
-            if "message" in choice:
-                return choice["message"]["content"]
-
-            if "text" in choice:
-                return choice["text"]
-
-        return extract_ai_text(data)
-
-    except requests.exceptions.Timeout:
-        return "LLM request timed out."
-
-    except requests.exceptions.RequestException as e:
-        return f"LLM request failed: {str(e)}"
+    # WatsonX / other formats fallback
+    return extract_ai_text(data)
 
 
 def analyze_repository_with_bob(context: str):
-    prompt = f"""
+    """
+    Analyze repository architecture and engineering structure.
+    """
+
+    prompt = f"""You are an expert software architect.
+
 Analyze this software repository.
 
+Provide clean markdown with sections.
+
+Include:
+
+# Architecture Overview
+- Explain overall architecture
+
+# Main Modules
+- Important modules and responsibilities
+
+# Framework Analysis
+- Explain framework usage
+
+# Engineering Risks
+- Potential scalability or maintainability concerns
+
+# Recommendations
+- Suggested engineering improvements
+
 Repository Context:
-{context[:6000]}
+{context}
 """
-    return send_bob_request(prompt, 400)
+
+    return send_bob_request(prompt, max_tokens=1500)
 
 
 def ask_repository_question(context: str, question: str):
-    prompt = f"""
-Repository Context:
-{context[:6000]}
+    """
+    Repository-aware AI chat.
+    """
 
-Question:
+    prompt = f"""You are an expert software architect.
+
+Use the repository context below to answer the user's question accurately.
+
+Return professional markdown.
+
+Repository Context:
+{context}
+
+User Question:
 {question}
+
+Include:
+- direct explanation
+- architecture insights
+- likely relevant modules/files
+- engineering observations
 """
-    return send_bob_request(prompt, 300)
+
+    return send_bob_request(prompt, max_tokens=1200)
 
 
 def analyze_pull_request(diff: str):
-    prompt = f"""
-Analyze this pull request diff:
+    """
+    Analyze pull request impact.
+    """
 
-{diff[:4000]}
+    prompt = f"""You are an expert senior software engineer.
+
+Analyze this pull request diff.
+
+Return professional markdown.
+
+Include:
+
+# Pull Request Summary
+- Explain changes clearly
+
+# Impacted Modules
+- Which systems are affected
+
+# Regression Risks
+- Possible breaking behavior
+
+# Security Concerns
+- Security implications
+
+# Recommended Tests
+- Suggested testing strategy
+
+# Deployment Risks
+- Infrastructure or rollout concerns
+
+Pull Request Diff:
+{diff[:12000]}
 """
-    return send_bob_request(prompt, 500)
+
+    return send_bob_request(prompt, max_tokens=1600)
 
 
 def generate_documentation(context: str, doc_type: str):
-    prompt = f"""
-Generate {doc_type} documentation.
+    """
+    Generate engineering documentation.
+    """
+
+    prompt = f"""Generate professional engineering documentation.
+
+Return clean markdown.
+
+Documentation Type:
+{doc_type}
+
+Include:
+- overview
+- architecture
+- setup
+- workflows
+- important modules
+- engineering notes
 
 Repository Context:
-{context[:6000]}
+{context}
 """
-    return send_bob_request(prompt, 500)
+
+    return send_bob_request(prompt, max_tokens=1800)
 
 
 def analyze_technical_debt(context: str):
-    prompt = f"""
-Analyze technical debt.
+    """
+    Analyze technical debt and maintainability.
+    """
+
+    prompt = f"""You are a principal software architect.
+
+Analyze this repository for technical debt and engineering risks.
+
+Return professional markdown.
+
+Include:
+
+# Maintainability Score
+Give a score from 1-10
+
+# Risky Modules
+- Explain risky areas
+
+# Architecture Concerns
+- Coupling
+- scalability
+- complexity
+
+# Complexity Hotspots
+- Potentially fragile systems
+
+# Refactor Recommendations
+- Suggested improvements
+
+# Long-Term Engineering Risks
+- Future scaling concerns
 
 Repository Context:
-{context[:6000]}
+{context}
 """
-    return send_bob_request(prompt, 500)
+
+    return send_bob_request(prompt, max_tokens=1600)
