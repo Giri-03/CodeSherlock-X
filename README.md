@@ -1,50 +1,146 @@
-# CodeSherlock X
-## Overview
-CodeSherlock X is an AI Engineering Intelligence Platform powered by IBM Bob. It provides a comprehensive solution for engineering teams to analyze, optimize, and improve their codebase. The platform consists of a backend API built with FastAPI and a frontend application built with Next.js.
+# CodeSherlock X 🕵️‍♂️⚡
+### AI-Powered Repository Intelligence for Developers
 
-## Architecture
-The architecture of CodeSherlock X is designed to be scalable, maintainable, and efficient. The backend API is responsible for handling requests, processing data, and providing responses to the frontend application. The frontend application is built using a modular approach, with separate components for different features and functionalities.
+CodeSherlock X is an AI-driven software engineering intelligence platform that helps developers **understand, analyze, document, and improve codebases instantly**.
 
-### Backend Architecture
-The backend API is built using FastAPI, a modern Python web framework. It consists of the following components:
-* `app`: The main application module, responsible for handling requests and responses.
-* `api`: The API module, responsible for defining API endpoints and handling requests.
-* `models`: The models module, responsible for defining database schemas and interacting with the database.
-* `services`: The services module, responsible for providing business logic and interacting with external services.
-* `utils`: The utilities module, responsible for providing helper functions and utilities.
+Built for modern development teams, CodeSherlock X acts like an intelligent code investigator — scanning repositories, extracting architecture insights, detecting code smells, generating documentation, and accelerating developer onboarding.
 
-### Frontend Architecture
-The frontend application is built using Next.js, a popular React framework. It consists of the following components:
-* `app`: The main application module, responsible for rendering the application.
-* `components`: The components module, responsible for defining reusable UI components.
-* `hooks`: The hooks module, responsible for providing custom React hooks.
-* `lib`: The library module, responsible for providing utility functions and libraries.
-* `pages`: The pages module, responsible for defining application pages and routes.
+---
 
-## Setup
-To set up CodeSherlock X, follow these steps:
-1. Clone the repository using `git clone`.
-2. Install the required dependencies using `npm install` or `yarn install`.
-3. Start the backend API using `uvicorn main:app --host 0.0.0.0 --port 8000`.
-4. Start the frontend application using `npm run dev` or `yarn dev`.
+## 🚀 Problem Statement
 
-## Workflows
-CodeSherlock X provides the following workflows:
-* **Code Analysis**: Analyze code quality, security, and performance using IBM Bob.
-* **Code Optimization**: Optimize code for better performance, readability, and maintainability.
-* **Code Review**: Review code changes and provide feedback using GitHub integration.
+Modern codebases are complex.
 
-## Important Modules
-The following modules are important for the functionality of CodeSherlock X:
-* `analyzer.py`: Provides code analysis functionality using IBM Bob.
-* `doc_generator.py`: Generates documentation for the codebase.
-* `github_service.py`: Provides GitHub integration for code review and feedback.
-* `pr_analyzer.py`: Analyzes pull requests and provides feedback.
-* `repo_parser.py`: Parses repository data and provides insights.
+Developers often struggle with:
 
-## Engineering Notes
-* The backend API uses FastAPI for building RESTful APIs.
-* The frontend application uses Next.js for building server-side rendered React applications.
-* The platform uses IBM Bob for code analysis and optimization.
-* The platform uses GitHub integration for code review and feedback.
-* The platform uses a modular approach for building and maintaining the application.
+- Understanding unfamiliar repositories
+- Onboarding into existing projects
+- Finding architectural bottlenecks
+- Detecting code quality issues
+- Generating technical documentation
+- Identifying dead code and duplicated logic
+- Navigating large codebases efficiently
+
+This leads to:
+
+- Slow onboarding
+- Reduced developer productivity
+- Higher maintenance costs
+- Technical debt accumulation
+
+---
+
+## 💡 Solution
+
+CodeSherlock X solves this by providing AI-powered repository intelligence.
+
+Simply connect a GitHub repository, and CodeSherlock X will:
+
+✅ Analyze project architecture  
+✅ Generate repository summaries  
+✅ Detect code smells and anti-patterns  
+✅ Find dead code & duplication  
+✅ Explain complex code sections  
+✅ Generate technical documentation  
+✅ Create dependency insights  
+✅ Help developers understand unfamiliar code instantly  
+
+---
+
+## ✨ Key Features
+
+### 🔍 Repository Deep Scan
+Analyze repository structure, architecture, and technology stack.
+
+### 🧠 AI Code Understanding
+Understand what each module, component, and service does using AI explanations.
+
+### 📚 Documentation Generator
+Auto-generate:
+
+- README summaries
+- API documentation
+- Module documentation
+- Developer onboarding notes
+
+### ⚠️ Code Smell Detection
+Detect:
+
+- Long functions
+- Duplicate logic
+- Dead code
+- Poor naming patterns
+- Complexity hotspots
+
+### 🏗 Architecture Mapping
+Visualize:
+
+- Folder hierarchy
+- Component relationships
+- Dependency insights
+- Service structure
+
+### 🤖 AI Developer Assistant
+Ask questions like:
+
+- “What does this project do?”
+- “Explain authentication flow”
+- “Find duplicated logic”
+- “Show risky files”
+- “Where is API handling implemented?”
+
+### 📈 Productivity Insights
+Help teams improve maintainability and engineering efficiency.
+
+---
+
+## 🛠 Tech Stack
+
+### Frontend
+- Next.js 15
+- React
+- TypeScript
+- Tailwind CSS
+- shadcn/ui
+- Radix UI
+- Lucide Icons
+- Framer Motion
+
+### Backend
+- Python
+- FastAPI / Flask *(depending on implementation)*
+- AI orchestration layer
+
+### AI / Intelligence Layer
+- LLM-powered code analysis
+- Repository parsing engine
+- Static analysis pipeline
+- Documentation generation engine
+
+### Integrations
+- GitHub API
+- Repository cloning / parsing
+- AI inference APIs
+
+---
+
+## 🏗 System Architecture
+
+```text
+User
+ │
+ ▼
+Frontend (Next.js Dashboard)
+ │
+ ▼
+Backend API Layer
+ │
+ ├── GitHub Repository Fetcher
+ ├── Repository Parser
+ ├── Static Code Analyzer
+ ├── AI Intelligence Engine
+ ├── Documentation Generator
+ └── Risk / Insight Engine
+ │
+ ▼
+Results Dashboard
