@@ -17,7 +17,7 @@ LLM_API_URL = os.getenv(
     "LLM_API_URL",
     "https://api.groq.com/openai/v1/chat/completions"
 )
-LLM_MODEL = os.getenv("LLM_MODEL", "llama3-8b-8192")
+LLM_MODEL = os.getenv("LLM_MODEL", "llama-3.3-70b-versatile")
 
 
 def send_bob_request(prompt: str, max_tokens: int = 1200):
