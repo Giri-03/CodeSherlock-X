@@ -7,6 +7,12 @@ Built for modern development teams, CodeSherlock X acts like an intelligent code
 
 ---
 
+## 🌐 Live Demo
+
+🚀 **Try CodeSherlock X Live:** https://codesherlock-x-1.onrender.com/
+
+---
+
 ## 🚀 Problem Statement
 
 Modern codebases are complex.
@@ -108,8 +114,8 @@ Help teams improve maintainability and engineering efficiency.
 
 ### Backend
 - Python
-- FastAPI / Flask *(depending on implementation)*
-- AI orchestration layer
+- Flask
+- REST API Layer
 
 ### AI / Intelligence Layer
 - LLM-powered code analysis
