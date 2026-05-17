@@ -16,7 +16,12 @@ LLM_MODEL = os.getenv("LLM_MODEL", "llama-3.1-8b-instant")
 def send_bob_request(prompt: str, max_tokens: int = 400):
     payload = {
         "model": LLM_MODEL,
-        "messages": [{"role": "user", "content": prompt}],
+        "messages": [
+            {
+                "role": "user",
+                "content": prompt
+            }
+        ],
         "max_tokens": max_tokens,
         "temperature": 0.3
     }
@@ -26,28 +31,41 @@ def send_bob_request(prompt: str, max_tokens: int = 400):
         "Content-Type": "application/json"
     }
 
-    response = requests.post(
-        LLM_API_URL,
-        headers=headers,
-        json=payload,
-        timeout=60
-    )
+    try:
+        response = requests.post(
+            LLM_API_URL,
+            headers=headers,
+            json=payload,
+            timeout=60
+        )
 
-    if response.status_code == 429:
-        return "LLM rate limit exceeded. Please try again later."
+        if response.status_code == 429:
+            return "LLM rate limit exceeded. Please try again later."
 
-    response.raise_for_status()
+        if response.status_code != 200:
+            print("LLM API Error:", response.status_code)
+            print("LLM Response:", response.text)
 
-    data = response.json()
+        response.raise_for_status()
 
-    if "choices" in data and data["choices"]:
-        choice = data["choices"][0]
-        if "message" in choice:
-            return choice["message"]["content"]
-        if "text" in choice:
-            return choice["text"]
+        data = response.json()
 
-    return extract_ai_text(data)
+        if "choices" in data and data["choices"]:
+            choice = data["choices"][0]
+
+            if "message" in choice:
+                return choice["message"]["content"]
+
+            if "text" in choice:
+                return choice["text"]
+
+        return extract_ai_text(data)
+
+    except requests.exceptions.Timeout:
+        return "LLM request timed out."
+
+    except requests.exceptions.RequestException as e:
+        return f"LLM request failed: {str(e)}"
 
 
 def analyze_repository_with_bob(context: str):
